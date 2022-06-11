@@ -9,8 +9,13 @@ const getGoals = (req, res) => {
 // @route POST /api/goals
 // @access private
 const setGoals = (req, res) => {
+  if (!req.body.text) {
+    res.status(400);
+    throw new Error("Please add a text input");
+  }
   res.status(200).json({ message: "Set Goals" });
 };
+
 // @desc update a goal
 // @route PUT /api/goals/:id
 // @access private
@@ -24,4 +29,4 @@ const deleteGoals = (req, res) => {
   res.status(200).json({ message: `delete Goal ${req.params.id}` });
 };
 
-module.exports = { getGoals, setGoals,updateGoal,deleteGoals };
+module.exports = { getGoals, setGoals, updateGoal, deleteGoals };
