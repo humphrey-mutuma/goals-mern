@@ -37,6 +37,7 @@ const registerUser = asyncHandler(async (req, res) => {
       _id: user.id,
       name: user.name,
       email: user.email,
+      token: generateToken(user._id),
     });
   } else {
     res.status(400);
@@ -49,7 +50,7 @@ const registerUser = asyncHandler(async (req, res) => {
 // @access private
 const loginUser = asyncHandler(async (req, res) => {
   // fetch email and password from the login form
-  const { email, password } = req.body
+  const { email, password } = req.body;
   // console.log(req.body);
   // check for user email from DB
   const user = await User.findOne({ email });
@@ -59,6 +60,7 @@ const loginUser = asyncHandler(async (req, res) => {
       _id: user.id,
       name: user.name,
       email: user.email,
+      token: generateToken(user._id), 
     });
   } else {
     res.status(400);
@@ -72,5 +74,12 @@ const loginUser = asyncHandler(async (req, res) => {
 const getMe = asyncHandler(async (req, res) => {
   res.json({ message: "User data displayed" });
 });
+
+// Generate JWT
+const generateToken = (id) => {
+  return jwt.sign({ id }, process.env.JWT_SECRET, {
+    expiresIn: 30,
+  });
+};
 
 module.exports = { registerUser, loginUser, getMe };
